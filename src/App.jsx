@@ -1,32 +1,43 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
+import { isDisabled } from '@testing-library/user-event/dist/utils';
 
 function App() {
   
-  const [second, setSecond]=useState('0');
-  const [minute, setMinute]=useState('0')
+  const [second, setSecond]=useState(0);
+  const [minute, setMinute]=useState(0);
+  const [run,setRun]=useState(false)
 
-  var timer=null;
-  useEffect=(()=>{
   
+  useEffect(()=>{
+    let timer=null;
+  if(run){
     timer= setInterval(()=>{
       setSecond(second+1);
-    
-      if (second===59) {
+    //alert('done');
+      if (second===60) {
         setMinute(minute+1);
-        second(0);
+        setSecond(0);
       }
     },1000)
+  }else{
+    clearInterval(timer);
+  }
+    
     return()=>clearInterval(timer);
   });
  
+  const startTimer =()=>{
+setRun(true);
+  }
 const restTimer=()=>{
   setSecond(0);
   setMinute(0);
+  setRun(false);
 }
 const stopTimer=()=>{
-  clearInterval(timer);
+  setRun(false);
 }
 
 return (
@@ -40,7 +51,7 @@ return (
           </div>
           <div className='my-4 text-center'>
 
-            
+         <button className={!run? 'btn btn-outline-success me-2' : 'btn btn-outline-success me-2 disabled'}  onClick={startTimer}>Start</button>
             <button className="btn btn-outline-primary me-2" onClick={stopTimer}>Stop</button>
             <button className="btn btn-outline-danger me-2" onClick={restTimer} >Reset</button>
           </div>
